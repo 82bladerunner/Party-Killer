@@ -11,11 +11,15 @@ public class ScreenBlackout : MonoBehaviour
     public bool isFading = false;
     public GameObject DudeSpawner;
     public GameObject ExistingKillerSpawner;
+    private GameController gameController;  // Add a reference to GameController
 
     void Start()
     {
         // Set the initial color of the panel to fully transparent
         SetPanelAlpha(0f);
+        // Get the GameController component on the GameController object
+        gameController = GameObject.FindObjectOfType<GameController>();
+
     }
 
     // Expose a method to start the fade externally
@@ -45,12 +49,18 @@ public class ScreenBlackout : MonoBehaviour
             Instantiate(DudeSpawner, new Vector3(5.3845f, 2.0382f, 0f), Quaternion.identity);
             Instantiate(ExistingKillerSpawner, new Vector3(5.3845f, 2.0382f, 0f), Quaternion.identity);
         }
-        
 
         // Fade back to normal
         yield return FadeToNormal();
 
         isFading = false;
+        
+        if(GameController.levelCounter < 6){
+            gameController.StartCountdown();
+            Debug.Log("Level counter: " + GameController.levelCounter);
+        }
+
+        yield return null;
     }
 
     private void DestroyAllObjectsWithTag(string tag)
@@ -66,6 +76,7 @@ public class ScreenBlackout : MonoBehaviour
 
         Debug.Log("Destroyed all objects with tag: " + tag);
     
+        
     }
 
     IEnumerator FadeToBlack()

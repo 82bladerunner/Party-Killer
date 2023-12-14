@@ -16,20 +16,14 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        resetCountdown = countdownTime;
         levelCounter = 1;
         // Start the countdown when the script is initialized
         StartCountdown();
     }
 
-    // Update is called once per frame
-    void Update()
-    {        
-
-    }
-
     public void StartCountdown()
     {
+        resetCountdown = countdownTime;
         // Stop the previous coroutine if it's already running
         if (countdownCoroutine != null)
         {
@@ -45,7 +39,7 @@ public class GameController : MonoBehaviour
         while (countdownTime > 0f && !KillerFound)
         {
             // Display the current countdown time
-            Debug.Log($"Countdown: {countdownTime:F1} seconds");
+            Debug.Log($"Countdown: {countdownTime} seconds");
 
             // Wait for the next frame
             yield return null;
@@ -57,6 +51,10 @@ public class GameController : MonoBehaviour
         // Countdown has reached zero or KillerFound is true
         Debug.Log(KillerFound ? "Killer Found!" : "Countdown finished!");
 
-        if(!KillerFound){ screenBlackout.StartFadeEffect(); }
+        if(!KillerFound){screenBlackout.StartFadeEffect();}
+
+        yield return null;
+
+        countdownTime = resetCountdown;
     }
 }
