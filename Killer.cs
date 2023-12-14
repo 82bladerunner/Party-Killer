@@ -1,0 +1,24 @@
+using UnityEngine;
+
+public class Killer
+{
+    // Sprite arrays for different body parts
+    public Sprite[] hatSprites;
+    public Sprite[] headSprites;
+    public Sprite[] bodySprites;
+    public Sprite[] legsSprites;
+    public int HeadIndex { get; set; }
+    public int HatIndex { get; set; }
+    public int BodyIndex { get; set; }
+    public int LegsIndex { get; set; }
+
+    // Constructor to initialize the Killer with sprites for each body part
+    public Killer(int head, int hat, int body, int legs)
+    {
+        HeadIndex = head;
+        BodyIndex = body;
+        LegsIndex = legs;
+        HatIndex = hat;
+    }
+
+}
