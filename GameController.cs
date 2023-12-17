@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static Killer killer { get; set; }
+    public static NonPlayerCharacter[] nonPlayerCharacters { get; set; }
     public static bool KillerFound = false;
     public static int numOfKillersToSpawn = 1;
     

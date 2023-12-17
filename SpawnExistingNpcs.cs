@@ -1,8 +1,9 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class RandomObjectSpawner : MonoBehaviour
+public class SpawnExistingNpcs : MonoBehaviour
 {
     public GameObject objectToSpawn; // Prefab of the object you want to spawn
     private int numberOfObjectsToSpawn; // Number of objects to spawn
@@ -17,7 +18,6 @@ public class RandomObjectSpawner : MonoBehaviour
 
     void Start()
     {
-        numberOfObjectsToSpawn = NumberOfObjectsByLevel(GameController.levelCounter);
 
         // Get the Transform of the child objects
         GetChildTransformsByName();
@@ -48,6 +48,7 @@ public class RandomObjectSpawner : MonoBehaviour
         }
     }
 
+
     void GetChildTransformsByName()
     {
         // Find child objects by name
@@ -65,14 +66,33 @@ public class RandomObjectSpawner : MonoBehaviour
 
     void SpawnObjectsInsideBoundsArea()
     {   
-        for (int i = 0; i < numberOfObjectsToSpawn; i++)
-        {
-            // Get a random position inside the bounds
-            Vector3 randomPosition = GetRandomPositionInsideBounds();
+         // Access the NonPlayerCharacters array from GameController
+        NonPlayerCharacter[] npcArray = GameController.nonPlayerCharacters;
 
-            // Spawn the object at the random position
-            Instantiate(objectToSpawn, randomPosition, Quaternion.identity);
+        if (npcArray != null)
+        {
+            // Iterate through the array and spawn NonPlayerCharacters
+            int spawnedNpcAmount = 0;
+            foreach (NonPlayerCharacter npc in npcArray)
+            {
+                if(spawnedNpcAmount == NumberOfObjectsByLevel(GameController.levelCounter)) break;
+
+                // Get a random position inside the bounds
+                Vector3 randomPosition = GetRandomPositionInsideBounds();
+
+                // Spawn the NonPlayerCharacter at the random position
+                Instantiate(objectToSpawn, randomPosition, Quaternion.identity);
+
+                npc.isSpawned = true;
+                spawnedNpcAmount++;
+
+            }
         }
+        else
+        {
+            Debug.LogError("NonPlayerCharacters array is null.");
+        }
+
     }
 
     Vector3 GetRandomPositionInsideBounds()
