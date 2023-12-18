@@ -17,37 +17,16 @@ public class RandomObjectSpawner : MonoBehaviour
 
     void Start()
     {
-        numberOfObjectsToSpawn = NumberOfObjectsByLevel(GameController.levelCounter);
+        numberOfObjectsToSpawn = GameController.GetNumOfDudes(GameController.levelCounter);
 
         // Get the Transform of the child objects
         GetChildTransformsByName();
 
         // Spawn objects inside the bounds
         SpawnObjectsInsideBoundsArea();
-        Destroy(gameObject, disableSpawnersTimer);
+        GameObject[] foundNpcs = GameObject.FindGameObjectsWithTag("NonKiller");
+        var npcArray = foundNpcs;
     }
-
-    private int NumberOfObjectsByLevel(int level)
-    {
-        switch (level)
-        {
-            case 1:
-                return 25;
-            case 2:
-                return 20;
-            case 3:
-                return 15;
-            case 4:
-                return 10;
-            case 5:
-                return 5;
-            case 6:
-                return 0;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(level), "Invalid level number");
-        }
-    }
-
     void GetChildTransformsByName()
     {
         // Find child objects by name

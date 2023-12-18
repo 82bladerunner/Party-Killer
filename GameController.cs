@@ -1,10 +1,12 @@
 
+using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static Killer killer { get; set; }
-    public static NonPlayerCharacter[] nonPlayerCharacters { get; set; }
+    public static GameObject[] npcArray { get; set; }
     public static bool KillerFound = false;
     public static int numOfKillersToSpawn = 1;
     
@@ -13,13 +15,26 @@ public class GameController : MonoBehaviour
 
     private Coroutine countdownCoroutine;
     public ScreenBlackout screenBlackout;
+    internal static int guessCounter = 0;
+    public int maxGuesses = 3;
+
     public static int levelCounter { get; set; }
 
     void Start()
     {
         levelCounter = 1;
+        
         // Start the countdown when the script is initialized
         StartCountdown();
+        
+    }
+
+    void Update()
+    {
+        if(guessCounter == maxGuesses) 
+        {
+            levelCounter = 10;
+        }       
     }
 
     public void StartCountdown()
@@ -40,7 +55,7 @@ public class GameController : MonoBehaviour
         while (countdownTime > 0f && !KillerFound)
         {
             // Display the current countdown time
-            Debug.Log($"Countdown: {countdownTime} seconds");
+            //Debug.Log($"Countdown: {countdownTime} seconds");
 
             // Wait for the next frame
             yield return null;
@@ -57,5 +72,34 @@ public class GameController : MonoBehaviour
         yield return null;
 
         countdownTime = resetCountdown;
+    }
+
+    public static int GetNumOfDudes(int levelNum)
+    {
+        switch (levelNum)
+        {
+            case 1:
+                return 50;
+            case 2:
+                return 40;
+            case 3:
+                return 30;
+            case 4:
+                return 20;
+            case 5:
+                return 15;
+            case 6:
+                return 10;
+            case 7:
+                return 5;
+            case 8:
+                return 3;
+            case 9:
+                return 2;
+            case 10:
+                return 0;
+            default:
+                return 0; // Default value for other cases
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,9 +8,12 @@ public class ScreenBlackout : MonoBehaviour
     public float fadeDuration = 1.0f;
 
     public bool isFading = false;
-    public GameObject DudeSpawner;
+    public GameObject dudeSpawner;
     public GameObject ExistingKillerSpawner;
     private GameController gameController;  // Add a reference to GameController
+    public GameObject[] npcArray;
+
+    
 
     void Start()
     {
@@ -19,6 +21,8 @@ public class ScreenBlackout : MonoBehaviour
         SetPanelAlpha(0f);
         // Get the GameController component on the GameController object
         gameController = GameObject.FindObjectOfType<GameController>();
+
+        var npcArray = GameController.npcArray;
 
     }
 
@@ -40,14 +44,11 @@ public class ScreenBlackout : MonoBehaviour
 
         // Do any actions you want while the screen is black (e.g., load a new scene, perform some task)
         if(!GameController.KillerFound){
-            
-            DestroyAllObjectsWithTag("NonKiller");
-            DestroyAllObjectsWithTag("Killer");
 
             GameController.levelCounter += 1;
 
-            Instantiate(DudeSpawner, new Vector3(5.3845f, 2.0382f, 0f), Quaternion.identity);
-            Instantiate(ExistingKillerSpawner, new Vector3(5.3845f, 2.0382f, 0f), Quaternion.identity);
+            ReduceNpcs(GameController.GetNumOfDudes(GameController.levelCounter-1) - GameController.GetNumOfDudes(GameController.levelCounter));
+            ScrambleNpcs();
         }
 
         // Fade back to normal
@@ -55,7 +56,7 @@ public class ScreenBlackout : MonoBehaviour
 
         isFading = false;
         
-        if(GameController.levelCounter < 6){
+        if(GameController.levelCounter < 10){
             gameController.StartCountdown();
             Debug.Log("Level counter: " + GameController.levelCounter);
         }
@@ -63,20 +64,69 @@ public class ScreenBlackout : MonoBehaviour
         yield return null;
     }
 
-    private void DestroyAllObjectsWithTag(string tag)
+    private void ScrambleNpcs()
     {
-        // Find all GameObjects with the specified tag
-        GameObject[] findObjectsWithTag = GameObject.FindGameObjectsWithTag(tag);
-
-        // Loop through the array and destroy each object
-        foreach (GameObject obj in findObjectsWithTag)
+        // Scramble the positions of "NonKiller" NPCs
+        foreach (GameObject npc in npcArray)
         {
-            Destroy(obj);
+            ScrambleNpcPosition(npc);
         }
 
-        Debug.Log("Destroyed all objects with tag: " + tag);
+        var killer = GameObject.FindGameObjectsWithTag("Killer");
+        ScrambleNpcPosition(killer[0]);
+
     
-        
+    }
+
+    void ScrambleNpcPosition(GameObject npc)
+    {
+        // Ensure the DudeSpawner is set
+        if (dudeSpawner == null)
+        {
+            Debug.LogError("DudeSpawner reference not set!");
+            return;
+        }
+
+        // Get the positions of the DudeSpawner's child objects
+        Transform topLeft = dudeSpawner.transform.Find("TopLeft");
+        Transform bottomRight = dudeSpawner.transform.Find("BottomRight");
+        Transform bottomLeft = dudeSpawner.transform.Find("BottomLeft");
+        Transform topRight = dudeSpawner.transform.Find("TopRight");
+
+        // Ensure all child objects are found
+        if (topLeft == null || bottomRight == null || bottomLeft == null || topRight == null)
+        {
+            Debug.LogError("One or more DudeSpawner child objects not found!");
+            return;
+        }
+
+        // Randomize the position within the specified range around DudeSpawner
+        Vector3 randomPosition = new Vector3(
+            Random.Range(bottomLeft.position.x, topRight.position.x),
+            Random.Range(bottomLeft.position.y, topRight.position.y),
+            Random.Range(bottomLeft.position.z, topRight.position.z)
+        );
+
+        // Apply the new position to the NPC
+        npc.transform.position = randomPosition;
+    }
+
+    private void ReduceNpcs(int amountToDestroy)
+    {
+        npcArray = GameObject.FindGameObjectsWithTag("NonKiller");
+
+        // Ensure there are NPCs to destroy
+        if (npcArray.Length > 0)
+        {
+            // Loop through the NPCs to destroy
+            for (int i = 0; i < Mathf.Min(amountToDestroy, npcArray.Length); i++)
+            {
+                // Destroy the GameObject
+                Destroy(npcArray[i]);
+            }
+
+            Debug.Log("Number of NonKiller objects found: " + npcArray.Length + " Destroying " + amountToDestroy);
+        }
     }
 
     IEnumerator FadeToBlack()

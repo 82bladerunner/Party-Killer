@@ -19,6 +19,10 @@ public class ClickedObject : MonoBehaviour, IPointerClickHandler
             GameController.KillerFound = true; 
             Debug.Log("Killer found!");
             }
+        else if(eventData.pointerCurrentRaycast.gameObject.tag == "NonKiller"){
+            GameController.guessCounter++;
+            Debug.Log("WRONG!! BITCHHH!!!" + GameController.guessCounter + "/3");
+        }
     }
 
     private void AddPhysics2DRaycaster()
