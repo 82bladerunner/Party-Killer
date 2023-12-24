@@ -7,7 +7,7 @@ public class WobbleAnimation : MonoBehaviour
     public float minWobbleSpeed = 1f;
     public float maxWobbleSpeed = 2f;
     public float minWobbleAmount = 0.01f;
-    public float maxWobbleAmount = 0.5f;
+    public float maxWobbleAmount = 0.05f;
 
     private Vector3 originalScale;
     private float wobbleSpeed;
@@ -43,7 +43,7 @@ public class WobbleAnimation : MonoBehaviour
             transform.localScale = new Vector3(Random.Range(0, 2) == 0 ? -1f : 1f, originalScale.y, originalScale.z);
 
             // Wait for a random time before the next randomization
-            yield return new WaitForSeconds(Random.Range(1f, 5f));
+            yield return new WaitForSeconds(Random.Range(0f, 5f));
         }
     }
 }
