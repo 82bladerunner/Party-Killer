@@ -9,9 +9,9 @@ public class ScreenBlackout : MonoBehaviour
 
     public bool isFading = false;
     public GameObject dudeSpawner;
-    public GameObject ExistingKillerSpawner;
     private GameController gameController;  // Add a reference to GameController
     public GameObject[] npcArray;
+    public Killer killer;
 
     
 
@@ -56,11 +56,15 @@ public class ScreenBlackout : MonoBehaviour
 
         isFading = false;
         
-        if(GameController.levelCounter < 10){
+        if(GameController.levelCounter < 11){
             gameController.StartCountdown();
             Debug.Log("Level counter: " + GameController.levelCounter);
         }
+        else {
+            //Endgame actions
+            Debug.Log("Game Finished");
 
+        }
         yield return null;
     }
 

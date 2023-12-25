@@ -17,11 +17,18 @@ public class ClickedObject : MonoBehaviour, IPointerClickHandler
 
         if(eventData.pointerCurrentRaycast.gameObject.tag == "Killer") {
             GameController.KillerFound = true; 
+
+            //TODO
+            //killer rengarenk olsun
+            //oyun bitti yazısı
+            //skor hesabı
+
+
             Debug.Log("Killer found!");
             }
         else if(eventData.pointerCurrentRaycast.gameObject.tag == "NonKiller"){
             GameController.guessCounter++;
-            Debug.Log("WRONG!! BITCHHH!!!" + GameController.guessCounter + "/3");
+            Debug.Log("WRONG!!!" + GameController.guessCounter + "/3");
         }
     }
 

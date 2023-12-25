@@ -31,10 +31,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if(guessCounter == maxGuesses) 
-        {
-            levelCounter = 10;
-        }       
+
     }
 
     public void StartCountdown()
@@ -97,6 +94,8 @@ public class GameController : MonoBehaviour
             case 9:
                 return 2;
             case 10:
+                return 1;
+            case 11:
                 return 0;
             default:
                 return 0; // Default value for other cases

@@ -21,7 +21,7 @@ public class MouseHover : MonoBehaviour
     // Called when the mouse enters the collider of the GameObject
     private void OnMouseEnter()
     {
-        Debug.Log("Mouse entered!");
+        //Debug.Log("Mouse entered!");
 
         // Change sprite colors to a new color (e.g., red)
         ChangeSpriteColors(Color.red);
@@ -30,7 +30,7 @@ public class MouseHover : MonoBehaviour
     // Called when the mouse exits the collider of the GameObject
     private void OnMouseExit()
     {
-        Debug.Log("Mouse exited!");
+        //Debug.Log("Mouse exited!");
 
         // Revert sprite colors to the original colors
         ChangeSpriteColors(originalColors);
