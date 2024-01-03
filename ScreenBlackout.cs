@@ -63,6 +63,7 @@ public class ScreenBlackout : MonoBehaviour
         else {
             //Endgame actions
             Debug.Log("Game Finished");
+            AudioManager.Instance.PlaySFX("CrowdLaugh");
 
         }
         yield return null;

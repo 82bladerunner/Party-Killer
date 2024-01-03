@@ -23,12 +23,14 @@ public class ClickedObject : MonoBehaviour, IPointerClickHandler
             //oyun bitti yazısı
             //skor hesabı
 
-
             Debug.Log("Killer found!");
+            AudioManager.Instance.PlaySFX("CrowdYay");
+
             }
         else if(eventData.pointerCurrentRaycast.gameObject.tag == "NonKiller"){
-            GameController.guessCounter++;
-            Debug.Log("WRONG!!!" + GameController.guessCounter + "/3");
+            GameController.guessCounter--;
+            Debug.Log("WRONG!!!" + GameController.guessCounter + " guesses left.");
+            AudioManager.Instance.PlaySFX("Wrong");
         }
     }
 

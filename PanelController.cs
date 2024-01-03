@@ -14,7 +14,6 @@ public class PanelController : MonoBehaviour
 
     void Start()
     {
-        if (Input.anyKeyDown) ShowCurrentPanel();
         
     }
 
@@ -22,16 +21,22 @@ public class PanelController : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            currentPanelIndex++;
+            //play SFX insert coin
+            if(currentPanelIndex == -1) AudioManager.Instance.PlaySFX("InsertCoin");
 
+            //change to next panel
+            currentPanelIndex++;
+            
             // If there are more panels, show the next one; otherwise, load the next scene
             if (currentPanelIndex < panels.Length)
             {
+                AudioManager.Instance.PlaySFX("Whoosh");
                 ShowCurrentPanel();
             }
             else
             {
                 StartCoroutine(FadeAndLoadNextScene());
+                AudioManager.Instance.PlaySFX("StartBell");
             }
         }
     }
@@ -65,6 +70,8 @@ public class PanelController : MonoBehaviour
         float elapsedTime = 0f;
         Color startColor = fadeImage.color;
         Color targetColor = new Color(startColor.r, startColor.g, startColor.b, targetAlpha);
+
+        AudioManager.Instance.FadeOutAndStopMusic(fadeDuration);
 
         while (elapsedTime < fadeDuration)
         {

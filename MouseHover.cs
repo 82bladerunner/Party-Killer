@@ -25,6 +25,7 @@ public class MouseHover : MonoBehaviour
 
         // Change sprite colors to a new color (e.g., red)
         ChangeSpriteColors(Color.red);
+        AudioManager.Instance.PlaySFX("Pick");
     }
 
     // Called when the mouse exits the collider of the GameObject

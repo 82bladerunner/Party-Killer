@@ -15,9 +15,7 @@ public class GameController : MonoBehaviour
 
     private Coroutine countdownCoroutine;
     public ScreenBlackout screenBlackout;
-    internal static int guessCounter = 0;
-    public int maxGuesses = 3;
-
+    internal static int guessCounter = 3;
     public static int levelCounter { get; set; }
 
     void Start()
