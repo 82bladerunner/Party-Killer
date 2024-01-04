@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -14,7 +16,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -24,9 +26,53 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
+        // Play the MainMenuTheme with fade in
         PlayMusic("MainMenuTheme");
+
+        // Play the CrowdTalkingSmall with fade in
+        PlayMusic("CrowdTalkingSmall");
     }
 
+
+    public void PlayMusic(string name, float fadeDuration)
+    {
+        Sound s = Array.Find(musicSounds, x => x.name == name);
+
+        if (s == null)
+        {
+            Debug.Log("Sound Not Found");
+        }
+        else
+        {
+            // Set the clip and play the sound effect
+            musicSource.clip = s.clip;
+            musicSource.Play();
+
+            // Start fading in the music
+            StartCoroutine(FadeIn(musicSource, fadeDuration));
+        }
+    }
+
+    private IEnumerator FadeIn(AudioSource audioSource, float fadeDuration)
+    {
+        float elapsedTime = 0f;
+
+        // Gradually increase the volume
+        while (elapsedTime < fadeDuration)
+        {
+            float newVolume = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
+            audioSource.volume = newVolume;
+
+            // Wait for the next frame
+            yield return null;
+
+            // Increase the elapsed time
+            elapsedTime += Time.deltaTime;
+        }
+
+        // Ensure the volume is set to 1 at the end
+        audioSource.volume = 1f;
+    }
     public void PlayMusic(string name)
     {
         Sound s = Array.Find(musicSounds, x => x.name == name);
@@ -38,8 +84,14 @@ public class AudioManager : MonoBehaviour
 
         else 
         {
-            musicSource.clip = s.clip;
-            musicSource.Play();
+        // Create a new GameObject for the sound effect
+        GameObject musicObject = new GameObject("SFX_" + name);
+        AudioSource musicSource = musicObject.AddComponent<AudioSource>();
+
+        // Set the clip and play the sound effect    
+
+        musicSource.clip = s.clip;
+        musicSource.Play();
         }
     }
 
@@ -53,7 +105,7 @@ public class AudioManager : MonoBehaviour
         }
 
         else
-    {
+        {
         // Create a new GameObject for the sound effect
         GameObject sfxObject = new GameObject("SFX_" + name);
         AudioSource sfxAudioSource = sfxObject.AddComponent<AudioSource>();
@@ -64,7 +116,7 @@ public class AudioManager : MonoBehaviour
 
         // Destroy the GameObject after the sound finishes playing
         Destroy(sfxObject, s.clip.length);
-    }
+        }
     }
 
     public void FadeOutAndStopMusic(float fadeOutTime)

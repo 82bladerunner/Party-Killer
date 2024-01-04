@@ -17,6 +17,8 @@ public class ScreenBlackout : MonoBehaviour
 
     void Start()
     {
+        GameController.KillerFoundEvent += OnGameLostOrWin;
+        GameController.GameLostEvent += OnGameLostOrWin;
         // Set the initial color of the panel to fully transparent
         SetPanelAlpha(0f);
         // Get the GameController component on the GameController object
@@ -25,6 +27,13 @@ public class ScreenBlackout : MonoBehaviour
         var npcArray = GameController.npcArray;
 
     }
+
+    private void OnGameLostOrWin()
+    {
+        AudioManager.Instance.FadeOutAndStopMusic(fadeDuration);
+        StartFadeToBlackCoroutine();
+    }
+
 
     // Expose a method to start the fade externally
     public void StartFadeEffect()
@@ -35,7 +44,12 @@ public class ScreenBlackout : MonoBehaviour
         }
     }
 
-    IEnumerator FadeToBlackAndBack()
+    public void StartFadeToBlackCoroutine()
+    {
+        StartCoroutine(FadeToBlack());
+    }
+
+    public IEnumerator FadeToBlackAndBack()
     {
         isFading = true;
 
@@ -63,7 +77,7 @@ public class ScreenBlackout : MonoBehaviour
         else {
             //Endgame actions
             Debug.Log("Game Finished");
-            AudioManager.Instance.PlaySFX("CrowdLaugh");
+            GameController.GameLost = true;
 
         }
         yield return null;
@@ -134,7 +148,7 @@ public class ScreenBlackout : MonoBehaviour
         }
     }
 
-    IEnumerator FadeToBlack()
+    public IEnumerator FadeToBlack()
     {
         float elapsedTime = 0f;
         Color startColor = blackoutPanel.color;

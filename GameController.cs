@@ -8,6 +8,11 @@ public class GameController : MonoBehaviour
     public static Killer killer { get; set; }
     public static GameObject[] npcArray { get; set; }
     public static bool KillerFound = false;
+    public static event Action KillerFoundEvent;
+    public static event Action GameLostEvent;
+    public static bool GameLost = false;
+    
+
     public static int numOfKillersToSpawn = 1;
     
     public float countdownTime = 5f;
@@ -15,6 +20,7 @@ public class GameController : MonoBehaviour
 
     private Coroutine countdownCoroutine;
     public ScreenBlackout screenBlackout;
+    
     internal static int guessCounter = 3;
     public static int levelCounter { get; set; }
 
@@ -24,11 +30,27 @@ public class GameController : MonoBehaviour
         
         // Start the countdown when the script is initialized
         StartCountdown();
+        AudioManager.Instance.PlayMusic("CrowdTalkingSmall");
         
     }
 
     void Update()
     {
+        if(KillerFound)
+        {
+            // Invoke the event when the killer is found
+            Debug.Log("Killer found event invoking.");
+            KillerFoundEvent?.Invoke();
+        }
+        if(GameLost)
+        {
+            // Invoke the event when the killer is found
+            GameLostEvent?.Invoke();
+        }
+
+        if(guessCounter <= 0){
+            GameLost = true;
+        }
 
     }
 
@@ -47,7 +69,7 @@ public class GameController : MonoBehaviour
 
     IEnumerator CountdownRoutine()
     {
-        while (countdownTime > 0f && !KillerFound)
+        while (countdownTime > 0f && !KillerFound && !GameLost)
         {
             // Display the current countdown time
             //Debug.Log($"Countdown: {countdownTime} seconds");
@@ -62,7 +84,7 @@ public class GameController : MonoBehaviour
         // Countdown has reached zero or KillerFound is true
         Debug.Log(KillerFound ? "Killer Found!" : "Countdown finished!");
 
-        if(!KillerFound){screenBlackout.StartFadeEffect();}
+        if(!KillerFound && !GameLost){screenBlackout.StartFadeEffect();}
 
         yield return null;
 

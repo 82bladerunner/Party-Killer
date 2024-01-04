@@ -24,7 +24,7 @@ public class MouseHover : MonoBehaviour
         //Debug.Log("Mouse entered!");
 
         // Change sprite colors to a new color (e.g., red)
-        ChangeSpriteColors(Color.red);
+        ChangeSpriteColors(Color.gray);
         AudioManager.Instance.PlaySFX("Pick");
     }
 

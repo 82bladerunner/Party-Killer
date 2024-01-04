@@ -16,7 +16,6 @@ public class ClickedObject : MonoBehaviour, IPointerClickHandler
         Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
 
         if(eventData.pointerCurrentRaycast.gameObject.tag == "Killer") {
-            GameController.KillerFound = true; 
 
             //TODO
             //killer rengarenk olsun
@@ -25,7 +24,7 @@ public class ClickedObject : MonoBehaviour, IPointerClickHandler
 
             Debug.Log("Killer found!");
             AudioManager.Instance.PlaySFX("CrowdYay");
-
+            GameController.KillerFound = true; 
             }
         else if(eventData.pointerCurrentRaycast.gameObject.tag == "NonKiller"){
             GameController.guessCounter--;
